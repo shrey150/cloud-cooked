@@ -12,14 +12,14 @@ export default function Home() {
   const [flightNumber, setFlightNumber] = useState("");
   const [showFlightNum, setShowFlightNum] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
-  
+
   const handleClick = () => {
     queryFetchAi({ flightNumber });
     setShowDashboard(!showDashboard);
   };
   return (
     <>
-    {showFlightNum && <FlightNum />}
+      {showFlightNum && <FlightNum />}
     </>
     // <div className="flex flex-col gap-4 sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]">
     //   <h1 className="text-5xl font-extrabold">

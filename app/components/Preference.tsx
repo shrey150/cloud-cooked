@@ -1,14 +1,8 @@
 "use client";
 
-import { api } from "@/convex/_generated/api";
-import { useAction } from "convex/react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function FlightNum() {
-  const queryFetchAi = useAction(api.functions.queryFetchAi);
-  const [flightNumber, setFlightNumber] = useState("");
-
   return (
     <div>
       <p>

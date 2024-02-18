@@ -3,18 +3,28 @@
 import { api } from "@/convex/_generated/api";
 import { useAction } from "convex/react";
 import { useState } from "react";
+import { useSessionId } from "convex-helpers/react/sessions";
 import { Button } from "@/components/ui/button";
 import Dashboard from "./Dashboard";
+import { getFetchAiResponse } from "@/convex/actions";
 
 export default function FlightNum() {
-  const queryFetchAi = useAction(api.functions.queryFetchAi);
+  const [sessionId] = useSessionId();
+  const initializeFetchAiSession = useAction(api.actions.initializeFetchAiSession);
+  const getFetchAiResponse = useAction(api.actions.getFetchAiResponse);
   const [flightNumber, setFlightNumber] = useState("");
   const [showDashboard, setShowDashboard] = useState(false);
-  
-  const handleClick = () => {
-    queryFetchAi({ flightNumber });
-    setShowDashboard(!showDashboard);
+
+  const handleClick = async () => {
+    console.log('clicked')
+    await initializeFetchAiSession({
+      sessionId,
+      flightNumber,
+    });
+    const result = await getFetchAiResponse({ sessionId });
+    console.log(result)
   };
+
   return (
     <div className="flex flex-col gap-4 sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]">
       <h1 className="text-5xl font-extrabold">
@@ -31,7 +41,7 @@ export default function FlightNum() {
         onChange={(e) => setFlightNumber(e.target.value)}
       />
       <Button
-        onClick={handleClick}
+        onClick={onClick}
         className="disabled:opacity-50 hover:opacity-75 drop-shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 p-2 rounded-xl"
         disabled={flightNumber === ""}
       >
