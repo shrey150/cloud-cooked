@@ -4,13 +4,22 @@ import { api } from "@/convex/_generated/api";
 import { useAction } from "convex/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Dashboard from "./Dashboard";
 
 export default function FlightNum() {
   const queryFetchAi = useAction(api.functions.queryFetchAi);
   const [flightNumber, setFlightNumber] = useState("");
-
+  const [showDashboard, setShowDashboard] = useState(false);
+  
+  const handleClick = () => {
+    queryFetchAi({ flightNumber });
+    setShowDashboard(!showDashboard);
+  };
   return (
-    <div>
+    <div className="flex flex-col gap-4 sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]">
+      <h1 className="text-5xl font-extrabold">
+        am i cooked? ☁🛫️️
+      </h1>
       <p>
         enter your flight number, and we’ll help you discover backup plans to ensure that you can make it happen.
       </p>
@@ -21,15 +30,14 @@ export default function FlightNum() {
         value={flightNumber}
         onChange={(e) => setFlightNumber(e.target.value)}
       />
-      <button
-        onClick={() => queryFetchAi({
-          flightNumber,
-        })}
+      <Button
+        onClick={handleClick}
         className="disabled:opacity-50 hover:opacity-75 drop-shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 p-2 rounded-xl"
         disabled={flightNumber === ""}
       >
         {flightNumber === "" ? "Enter your flight number" : "Submit"}
-      </button>
+      </Button>
+      {showDashboard && <Dashboard />}
     </div>
   );
 }
