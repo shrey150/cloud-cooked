@@ -1,12 +1,14 @@
 "use client";
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import FlightNum from "./components/FlightNum";
 
 export default function Home() {
-  const router = useRouter()
+  const searchParams = useSearchParams()
+  const simpleMode = (searchParams.get('simple-mode') ?? "") === 'true';
+  const router = useRouter();
   const handleFlightNumSubmit = (flightNumber: string) => {
-    router.push(`/fetch-ai?flight-number=${flightNumber}`)
+    router.push(`/fetch-ai?flight-number=${flightNumber}&simple-mode=${simpleMode}`)
   };
 
   return (

@@ -16,8 +16,8 @@ async function createAndRegisterFetchAiSession(ctx: any, sessionId: string) {
 }
 
 export const initializeFetchAiSession = action({
-  args: { ...SessionIdArg, flightNumber: v.string() },
-  handler: async (ctx, { sessionId, flightNumber }) => {
+  args: { ...SessionIdArg, flightNumber: v.string(), simpleMode: v.optional(v.boolean()) },
+  handler: async (ctx, { sessionId, flightNumber, simpleMode }) => {
     const fetchAiSessionIdRowOrNull = await ctx.runQuery(internal.functions.getFetchAiSessionId, {
       sessionId,
     });
@@ -34,7 +34,7 @@ export const initializeFetchAiSession = action({
       return;
     }
 
-    await startFetchAiSession(fetchAiSessionId, createPrompt(flightNumber));
+    await startFetchAiSession(fetchAiSessionId, createPrompt(flightNumber, simpleMode));
 
     await ctx.runMutation(internal.functions.setFetchAiSessionStarted, {
       fetchAiSessionId,

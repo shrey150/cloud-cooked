@@ -17,6 +17,7 @@ export default function FetchAi() {
   const router = useRouter();
   const searchParams = useSearchParams()
   const flightNumber = searchParams.get('flight-number') ?? "";
+  const simpleMode = (searchParams.get('simple-mode') ?? "") === 'true';
   const [sessionId] = useSessionId();
   const [initializing, setInitializing] = useState(true);
   const [taskListMessage, setTaskListMessage] = useState({});
@@ -57,6 +58,7 @@ export default function FetchAi() {
     await initializeFetchAiSession({
       sessionId,
       flightNumber,
+      simpleMode,
     });
 
     await new Promise(res => setTimeout(res, 1000));
@@ -116,7 +118,7 @@ export default function FetchAi() {
         <div>
           <h4 className="text-lg">Passing prompt to fetch.ai DELTA-V API, please wait...</h4>
           <pre className="text-left animate-pulse mt-16 text-wrap">
-            {createPrompt(flightNumber)}
+            {createPrompt(flightNumber, simpleMode)}
           </pre>
         </div>
       ) : (
