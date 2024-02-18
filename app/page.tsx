@@ -34,7 +34,6 @@ export default function Home() {
         {flightNumber === "" ? "Enter your flight number" : "Submit"}
       </button>
 
-      </div>
     </div>
   );
 }
