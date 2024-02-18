@@ -10,6 +10,8 @@ When a flight is missed or delayed, the possible alternatives are very open-ende
 
 ## What it does
 
+<img src="docs/screenshot.png" width="500" />
+
 1. Enter in your flight number
 1. We call fetch.ai's DELTA-V Chat API with the prompt in `cloud-cooked/convex/actions.ts`
 1. Given agents that we've already set up on fetch.ai's [agentverse](https://agentverse.ai/), we ask DELTA-V to respond to our prompt, finding you alternative routings for your flight including buses, trains, public transit, etc. There is no coding needed on our end besides the prompt — DELTA-V automatically determines the best agents to complete the task, then queries the APIs it needs to come up with a plan.
