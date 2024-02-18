@@ -1,33 +1,39 @@
 "use client";
 
+import { api } from "@/convex/_generated/api";
+import { useAction } from "convex/react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  const queryFetchAi = useAction(api.functions.queryFetchAi);
+  const [flightNumber, setFlightNumber] = useState("");
+
   return (
     <div className="flex flex-col gap-4 sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]">
       <h1 className="text-5xl font-extrabold">
         am i cooked? ☁🛫️️
       </h1>
       <p>
-        share why you&apos;re cooked lol.
+        enter your flight number, and we’ll help you discover backup plans to ensure that you can make it happen.
       </p>
-      <Button variant="secondary" className="w-full">I haven&apos;t booked my flight yet</Button>
-      <Button
-        variant="secondary"
-        className="w-full"
+      <input
+        className="drop-shadow-lg p-3 rounded-xl backdrop-blur bg-white/80 focus:outline-none text-black"
+        type="text"
+        placeholder="Enter your flight number"
+        value={flightNumber}
+        onChange={(e) => setFlightNumber(e.target.value)}
+      />
+      <button
+        onClick={() => queryFetchAi({
+          flightNumber,
+        })}
+        className="disabled:opacity-50 hover:opacity-75 drop-shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 p-2 rounded-xl"
+        disabled={flightNumber === ""}
       >
-        I missed my flight
-      </Button>
-      <Button variant="secondary" className="w-full">
-        My flight got cancelled
-      </Button>
-      <div className="flex flex-row gap-2.5 sm:max-w-[100%] md:max-w-[100%] lg:max-w-[100%]">
-        <Button variant="default" className="w-full">
-          Back
-        </Button>
-        <Button variant="secondary" className="w-full">
-          Next
-        </Button>
+        {flightNumber === "" ? "Enter your flight number" : "Submit"}
+      </button>
+
       </div>
     </div>
   );

@@ -17,6 +17,6 @@ export default function FlightNum() {
       <Button variant="secondary" className="w-full">
         I haven’t booked my flight yet
       </Button>
-    </main>
+    </div>
   );
 }
