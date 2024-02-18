@@ -59,10 +59,10 @@ export default function Success() {
   }
 
   const confirmMessageIndex = messages.findIndex(message => {
-    return message?.user_message === "confirm";
+    return (message as any)?.user_message === "confirm";
   });
   const completedMessageIndex = messages.findIndex(message => {
-    return message?.agent_message?.includes("I have completed your task");
+    return (message as any)?.agent_message?.includes("I have completed your task");
   });
   const completed = completedMessageIndex !== -1;
   const resultMessageIndex = completedMessageIndex - 1;
@@ -138,7 +138,7 @@ export default function Success() {
                   </Badge>
                   <div className="space-x-3">
                     <Button className="bg-transparent hover:text-[#fff] hover:bg-transparent px-0 py-0">Select flight</Button>
-                    <Checkbox onClick={() => setIsChecked(!checked)} className="ring-offset-white data-[state=checked]:text-white data-[state=checked]:bg-[#076AFF] rounded-full items-center "> </Checkbox>
+                    <Checkbox onClick={() => setIsChecked(!isChecked)} className="ring-offset-white data-[state=checked]:text-white data-[state=checked]:bg-[#076AFF] rounded-full items-center "> </Checkbox>
                   </div>
                 </CardFooter>
               </Card>

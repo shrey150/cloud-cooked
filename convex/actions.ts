@@ -58,7 +58,7 @@ export const getFetchAiResponse = action({
       fetchAiSessionId = await createAndRegisterFetchAiSession(ctx, sessionId);
     }
 
-    const response = await fetch(
+    const response: any = await fetch(
       `https://agentverse.ai/v1beta1/engine/chat/sessions/${fetchAiSessionId}/messages?from_timestamp=2024-02-17T00:00:00.000000`, {
       method: 'GET',
       headers: {
@@ -94,7 +94,7 @@ export const sendFetchAiMessage = action({
       throw new Error("You must start a fetch.ai session first!")
     }
 
-    const response = await fetch(
+    const response: any = await fetch(
       `https://agentverse.ai/v1beta1/engine/chat/sessions/${fetchAiSessionId}/submit`, {
       method: 'POST',
       headers: {
@@ -133,7 +133,7 @@ export const sendFetchAiJsonMessage = action({
       throw new Error("You must start a fetch.ai session first!")
     }
 
-    const response = await fetch(
+    const response: any = await fetch(
       `https://agentverse.ai/v1beta1/engine/chat/sessions/${fetchAiSessionId}/submit`, {
       method: 'POST',
       headers: {
