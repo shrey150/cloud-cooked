@@ -51,19 +51,25 @@ export async function startFetchAiSession(fetchAiSessionId: string, objective: s
 /**
  * Creates the prompt to send to DELTA-V.
  */
+// export function createPrompt(flightNumber: string) {
+//   return `
+//     I currently have a ticket on flight number ${flightNumber.toUpperCase()}. I am worried the flight may be delayed or cancelled. Please do the following tasks:
+
+//     1. First, can you determine the origin and destination airports corresponding to this flight number?
+//     2. Then, can you determine the current delay status of this flight (i.e. will it leave on time)?
+//     3. Then, can you determine the probability of a departure delay at the origin airport?
+//     4. Then, can you determine the probability of an arrival delay at the destination airport?
+//     5. Multiply (1 - probability of departure delay) * (1 - probability of arrival delay) to determine probability of no delay.
+//     6. Next, find the closest airports to the origin airport. These are the alternative origin airports.
+//     7. After that, find the closest airports to the destination airport. These are the alternative destination airports.
+//     8. For each alternative origin airport, find flights from the alternative origin to the original destination.
+//     9. For each alternative destination airport, find flights from the original origin to the alternative destination.
+//     10. Finally, return the alternative flights.
+//   `.trim();
+// }
+
 export function createPrompt(flightNumber: string) {
   return `
-    I currently have a ticket on flight number ${flightNumber.toUpperCase()}. I am worried the flight may be delayed or cancelled. Please do the following tasks:
-
-    1. First, can you determine the origin and destination airports corresponding to this flight number?
-    2. Then, can you determine the current delay status of this flight (i.e. will it leave on time)?
-    3. Then, can you determine the probability of a departure delay at the origin airport?
-    4. Then, can you determine the probability of an arrival delay at the destination airport?
-    5. Multiply (1 - probability of departure delay) * (1 - probability of arrival delay) to determine probability of no delay.
-    6. Next, find the closest airports to the origin airport. These are the alternative origin airports.
-    7. After that, find the closest airports to the destination airport. These are the alternative destination airports.
-    8. For each alternative origin airport, find flights from the alternative origin to the original destination.
-    9. For each alternative destination airport, find flights from the original origin to the alternative destination.
-    10. Finally, return the alternative flights.
+    I currently have a ticket on flight number ${flightNumber.toUpperCase()}. What is the status of the flight?
   `.trim();
 }

@@ -21,7 +21,7 @@ export default function FlightNum({ onSubmitFlightNumber }: FlightNumProps) {
         worried about a flight cancellation or delay? enter your flight number
       </h4>
       <input
-        className="drop-shadow-lg p-3 rounded-xl backdrop-blur bg-black bg-opacity-10 focus:outline-none text-white"
+        className="drop-shadow-lg p-3 rounded-xl backdrop-blur bg-black bg-opacity-10 focus:outline-none text-white placeholder:text-slate-300"
         type="text"
         placeholder="Enter your flight number"
         value={flightNumber}

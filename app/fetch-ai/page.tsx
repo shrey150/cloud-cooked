@@ -29,7 +29,7 @@ export default function FetchAi() {
 
   // Resolves when there are at least two messages from fetch.ai
   // (i.e. LLM has responded at least once)
-  async function getNextFetchAiResponse(expectedMessageCount = 2) {
+  async function getNextFetchAiResponse(successFn: (messages: Array<any>) => boolean) {
     const res = await getFetchAiResponse({
       sessionId,
     });
@@ -38,13 +38,16 @@ export default function FetchAi() {
       setMessagesCount(res.messages.length);
     }
 
-    if (res && res.messages && res.messages.length >= expectedMessageCount) {
-      console.log(res.messages);
+    console.log(res.messages);
+    console.log(successFn.toString())
+    console.log(successFn(res.messages))
+
+    if (res && res.messages && successFn(res.messages)) {
       return res.messages;
     } else {
       return await new Promise((resolve) => {
         setTimeout(async () => {
-          resolve(await getNextFetchAiResponse(expectedMessageCount));
+          resolve(await getNextFetchAiResponse(successFn));
         }, 1000);
       })
     }
@@ -58,7 +61,7 @@ export default function FetchAi() {
 
     await new Promise(res => setTimeout(res, 1000));
 
-    const nextMessages = (await getNextFetchAiResponse()) ?? [];
+    const nextMessages = (await getNextFetchAiResponse((messages) => messages.length >= messagesCount + 2)) ?? [];
     const agentMessages = nextMessages.filter((message: any) => {
       if ("agent_json" in message) {
         return true;
@@ -90,17 +93,18 @@ export default function FetchAi() {
       sessionId,
       selectedTaskIndex: 0,
     });
-    const nextMessages = (await getNextFetchAiResponse(messagesCount + 2)) ?? [];
-    const lastMessage = nextMessages[nextMessages.length - 1];
-    if (lastMessage?.agent_json?.text?.includes('confirm')) {
-      await sendFetchAiMessage({
-        sessionId,
-        message: 'confirm',
-      });
-      await getNextFetchAiResponse(messagesCount + 4);
-      router.push('/success');
-    };
+    await getNextFetchAiResponse(
+      // Wait for confirmation message
+      (messages) => messages.find(message => message?.agent_json?.text?.includes('confirm'))
+    );
+
+    await sendFetchAiMessage({
+      sessionId,
+      message: 'confirm',
+    });
+    await getNextFetchAiResponse(messages => messages.length >= messagesCount + 2);
     setSendingNextMessage(false);
+    router.push('/success');
   }
 
   return (
@@ -121,10 +125,10 @@ export default function FetchAi() {
           <div className="flex flex-col gap-4 max-w-[80%] lg:max-w-[50%] mx-auto mt-8">
             {(taskListMessage?.agent_json?.options ?? []).map((task, i) => {
               return (
-                <Card className="p-4 bg-white/90">
+                <Card className="p-4 bg-white/90" key={task}>
                   <CardContent className="p-0 flex justify-between items-center">
                     <span className="text-slate-500 text-sm">{i + 1}</span>
-                    <span className="flex-1 font-bold text-lg">{task.value} Agent</span>
+                    <span className="flex-1 font-bold text-lg">{task.value} {task.value.endsWith("Agent") ? "" : "Agent"}</span>
                   </CardContent>
                 </Card>
               )
