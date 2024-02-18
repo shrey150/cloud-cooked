@@ -16,7 +16,7 @@ class FlightStatusRequest(Model):
 
 # Method that send the request to the endpoint which retrieves flight status for the specific flight number
 async def get_flight_status(flight_number: str):
-    api_key = "944df81f6cmsh5002628ca29729ep1fb091jsnfa683816414c"
+    api_key = "your api key here"
     base_url = "https://flight-radar1.p.rapidapi.com/flights/search"
     headers = {
         "X-RapidAPI-Host": "flight-radar1.p.rapidapi.com",
