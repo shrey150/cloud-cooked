@@ -1,40 +1,25 @@
 "use client";
 
-import { api } from "@/convex/_generated/api";
-import { useAction } from "convex/react";
 import { useState } from "react";
 import { useSessionId } from "convex-helpers/react/sessions";
 import { Button } from "@/components/ui/button";
-import Dashboard from "./Dashboard";
 
-export default function FlightNum({ onSubmit }) {
-  const [sessionId] = useSessionId();
-  const initializeFetchAiSession = useAction(api.actions.initializeFetchAiSession);
-  const getFetchAiResponse = useAction(api.actions.getFetchAiResponse);
+type FlightNumProps = {
+  onSubmitFlightNumber(flightNumber: string): void;
+}
+
+export default function FlightNum({ onSubmitFlightNumber }: FlightNumProps) {
   const [flightNumber, setFlightNumber] = useState("");
-  const [showDashboard, setShowDashboard] = useState(false);
-  const [showFlightNum, setShowFlightNum] = useState(true);
 
   const handleClick = async () => {
-    setShowDashboard(!showDashboard);
-    setShowFlightNum(!showFlightNum);
-    console.log('clicked')
-    // await initializeFetchAiSession({
-    //   sessionId,
-    //   flightNumber,
-    // });
-    // const result = await getFetchAiResponse({ sessionId });
-    // console.log(result)
-    onSubmit(showDashboard)
-    onSubmit(showFlightNum)
-
+    onSubmitFlightNumber(flightNumber);
   };
 
   return (
     <div className="flex flex-col gap-4 sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]">
-      <p>
-        enter your flight number, and we’ll help you discover backup plans to ensure that you can make it happen.
-      </p>
+      <h4 className="text-lg">
+        worried about a flight cancellation or delay? enter your flight number
+      </h4>
       <input
         className="drop-shadow-lg p-3 rounded-xl backdrop-blur bg-black bg-opacity-10 focus:outline-none text-white"
         type="text"
@@ -47,9 +32,12 @@ export default function FlightNum({ onSubmit }) {
         className="disabled:opacity-50 hover:opacity-75 border-1 drop-shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 p-2 rounded-xl"
         disabled={flightNumber === ""}
       >
-        {flightNumber === "" ? "Submit" : "Submit"}
+        {flightNumber === "" ? "Please enter your flight number" : "tell me if i'm cooked"}
       </Button>
-      {/* {showDashboard && <Dashboard />} */}
+      <p className="text-sm">
+        we’ll use ai to calculate the chance of cancellation and help you discover backup
+        routings to ensure that you'll be <b>where you need to be, when you need to be there</b>.
+      </p>
     </div>
   );
 }

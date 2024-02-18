@@ -17,6 +17,12 @@
 1. The alternate plan is displayed to the user.
 1. If the user likes the alternate plan, we have another prompt that is sent to DELTA-V which allows the user to book all the tickets.
 
+## Stack
+
+- fetch.ai to determine which agents to use
+- Convex to keep track of fetch.ai DELTA-V chatbot sessions on a per-tab basis
+- Next.js/Vercel for hosting
+
 ## Debugging
 
-- If the call to fetch.ai fails, you probably need to get a new authentication token. Log out and log back into the fetch.ai [API docs](https://fetch.ai/docs/apis/ai-engine/chat), then copy the JWT and replace the `FETCH_AI_AUTH_TOKEN` environment variable in Convex (in the `dev` environment)
+- If the call to fetch.ai fails, you probably need to get a new authentication token. Log out and log back into the fetch.ai [API docs](https://fetch.ai/docs/apis/ai-engine/chat), then copy the JWT and replace the `FETCH_AI_AUTH_TOKEN` [environment variable in Convex](https://dashboard.convex.dev/t/shrey150/cloud-cooked/posh-crane-176/settings/environment-variables) (in the `dev` environment)

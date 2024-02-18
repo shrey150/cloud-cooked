@@ -6,5 +6,6 @@ export default defineSchema({
   fetchAiSessionIds: defineTable({
     sessionId: vSessionId,
     fetchAiSessionId: v.string(),
+    fetchAiSessionStarted: v.boolean(),
   }).index("by_sessionId", ["sessionId"]),
 });
