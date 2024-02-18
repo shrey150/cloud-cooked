@@ -36,7 +36,7 @@ export default function FlightNum({ onSubmit }) {
         enter your flight number, and we’ll help you discover backup plans to ensure that you can make it happen.
       </p>
       <input
-        className="drop-shadow-lg p-3 rounded-xl backdrop-blur bg-white/80 focus:outline-none text-black"
+        className="drop-shadow-lg p-3 rounded-xl backdrop-blur bg-black bg-opacity-10 focus:outline-none text-white"
         type="text"
         placeholder="Enter your flight number"
         value={flightNumber}
@@ -44,10 +44,10 @@ export default function FlightNum({ onSubmit }) {
       />
       <Button
         onClick={handleClick}
-        className="disabled:opacity-50 hover:opacity-75 drop-shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 p-2 rounded-xl"
+        className="disabled:opacity-50 hover:opacity-75 border-1 drop-shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 p-2 rounded-xl"
         disabled={flightNumber === ""}
       >
-        {flightNumber === "" ? "Enter your flight number" : "Submit"}
+        {flightNumber === "" ? "Submit" : "Submit"}
       </Button>
       {/* {showDashboard && <Dashboard />} */}
     </div>
