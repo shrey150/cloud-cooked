@@ -19,7 +19,7 @@ export default function FetchAi() {
   const flightNumber = searchParams.get('flight-number') ?? "";
   const [sessionId] = useSessionId();
   const [initializing, setInitializing] = useState(true);
-  const [taskListMessage, setTaskListMessage] = useState();
+  const [taskListMessage, setTaskListMessage] = useState({});
   const [messagesCount, setMessagesCount] = useState(0);
   const [sendingNextMessage, setSendingNextMessage] = useState(false);
   const initializeFetchAiSession = useAction(api.actions.initializeFetchAiSession);
@@ -123,7 +123,7 @@ export default function FetchAi() {
         <div className="max-w-full">
           <h4 className="text-lg">fetch.ai will use the following agents to solve the task:</h4>
           <div className="flex flex-col gap-4 max-w-[80%] lg:max-w-[50%] mx-auto mt-8">
-            {(taskListMessage?.agent_json?.options ?? []).map((task, i) => {
+            {((taskListMessage as any)?.agent_json?.options ?? []).map((task: any, i: number) => {
               return (
                 <Card className="p-4 bg-white/90" key={task}>
                   <CardContent className="p-0 flex justify-between items-center">
