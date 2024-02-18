@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useSessionId } from "convex-helpers/react/sessions";
 import { Button } from "@/components/ui/button";
 import Dashboard from "./Dashboard";
-import { getFetchAiResponse } from "@/convex/actions";
 
 export default function FlightNum() {
   const [sessionId] = useSessionId();
@@ -41,7 +40,7 @@ export default function FlightNum() {
         onChange={(e) => setFlightNumber(e.target.value)}
       />
       <Button
-        onClick={onClick}
+        onClick={handleClick}
         className="disabled:opacity-50 hover:opacity-75 drop-shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 p-2 rounded-xl"
         disabled={flightNumber === ""}
       >
