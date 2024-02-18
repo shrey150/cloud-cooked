@@ -19,6 +19,17 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function Dashboard( {onSubmit}) {
   const [isChecked, setIsChecked] = useState(false);
@@ -30,7 +41,7 @@ export default function Dashboard( {onSubmit}) {
     setIsChecked(!isChecked);
   };  
 
-  const handleBackClick = async () => {
+  const handleClick = async () => {
     setShowDashboard(!showDashboard);
     setShowFlightNum(!showFlightNum);
     console.log('clicked')
@@ -55,7 +66,7 @@ export default function Dashboard( {onSubmit}) {
                     <div className="text-2xl font-bold text-left text-white">SFO</div>
                     <div className="text-sm text-white text-left">San Francisco</div>
                   </div>
-                  {/* <Image src={lolCooked} alt="place"></Image> */}
+                  <Image src="/images/plane.png" alt="place" width={34} height={34}></Image>
                   <div>
                     <div className="text-sm text-white text-left">Going to</div>
                     <div className="text-2xl font-bold text-left text-white">DTW</div>
@@ -63,10 +74,9 @@ export default function Dashboard( {onSubmit}) {
                   </div>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <Badge className="bg-white bg-opacity-20 hover:bg-white hover:bg-opacity-20 mb-4 space-x-2 px-4 py-1">
-                    <div className="text-sm text-white">Flight status</div>
-                    <div className="mb-4 bg-white bg-opacity-20"> </div>
-                    <div className="text-sm text-green">Confirmed</div>
+                  <Badge className="bg-white bg-opacity-20 hover:bg-white hover:bg-opacity-20 mb-4 px-4 py-1">
+                    <div className="text-sm text-white border-r-2 border-white border-opacity-20 pr-4">Flight status</div>
+                    <div className="text-sm text-green pl-4">Confirmed</div>
                   </Badge>
                   <Badge className="bg-[#FFF] bg-opacity-20 hover:bg-white hover:bg-opacity-20 mb-4 space-x-1 px-4 py-1">
                     <div className="text-sm text-[#d1bc35]">66%</div>
@@ -110,7 +120,7 @@ export default function Dashboard( {onSubmit}) {
         </div>
         <div className="flex justify-between items-center mt-12 align-middle">
           <Button 
-            onClick={handleBackClick}
+            onSubmit={handleClick}
             className="hover:opacity-75 drop-shadow-lg bg-[#fff] bg-opacity-20 px-12 rounded-xl"
           >Try new flight number</Button>
           <Button className="bg-[#fff] bg-opacity-100 hover:bg-[#11111] text-black px-12 rounded-xl">Confirm new flight</Button>
