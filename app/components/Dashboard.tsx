@@ -20,12 +20,24 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
-export default function Dashboard() {
+export default function Dashboard( {onSubmit}) {
   const [isChecked, setIsChecked] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(true);
+  const [showFlightNum, setShowFlightNum] = useState(false);
+
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };  
+
+  const handleBackClick = async () => {
+    setShowDashboard(!showDashboard);
+    setShowFlightNum(!showFlightNum);
+    console.log('clicked')
+    onSubmit(showDashboard)
+    onSubmit(showFlightNum)
+
+  };
   return (
     <div className="min-h-screen text-white">
       <main className="px-8 py-12">
@@ -63,6 +75,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex items-left justify-between mb-4 bg-white bg-opacity-20 rounded-xl px-4 py-3">
+                <Image src="/images/delta.png" alt="Logo" width={34} height={34} />
                   <div className="flex text-sm text-white text-left flex-col">
                     <div className="font-bold mb-2">8:30 AM - 4:50PM</div>
                     <div>United</div>
@@ -96,7 +109,10 @@ export default function Dashboard() {
         
         </div>
         <div className="flex justify-between items-center mt-12 align-middle">
-          <Button className="hover:opacity-75 drop-shadow-lg bg-[#fff] bg-opacity-20 px-12 rounded-xl">Try new flight number</Button>
+          <Button 
+            onClick={handleBackClick}
+            className="hover:opacity-75 drop-shadow-lg bg-[#fff] bg-opacity-20 px-12 rounded-xl"
+          >Try new flight number</Button>
           <Button className="bg-[#fff] bg-opacity-100 hover:bg-[#11111] text-black px-12 rounded-xl">Confirm new flight</Button>
         </div>
         <div>
