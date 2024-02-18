@@ -5,6 +5,7 @@
 # third party modules used in this example
 import os
 import json
+import pickle
 from pydantic import Field, BaseModel
 import requests
 
@@ -89,9 +90,6 @@ def get_airport_disruptions():
     # make a dictionary of the results to get the airport code and the disruptions
     results = {result["airport"]: result for result in results}
 
-
-    
-
     try:
         print(results)
     except Exception as e:
@@ -114,7 +112,14 @@ def find_safe_flight(src, dst):
     if dst_disruptions is not None:
         dst_disruptions = dst_disruptions["departures"]
 
-    print('test', src_disruptions, 'test2', dst_disruptions)
+    # dump the data to a file
+    with open('src_disruptions.json', 'w', encoding='utf8') as f:
+        json.dump(src_disruptions, f, indent=4)
+
+    with open('dst_disruptions.json', 'w', encoding='utf8') as f:
+        json.dump(dst_disruptions, f, indent=4)
+
+    return src_disruptions, dst_disruptions
 
 def get_nearest_airports(location):
     # model = StructuredOpenAIModel()
@@ -158,9 +163,50 @@ def scrape_airport_codes(carrier_code, flight_number):
         print("Failed to retrieve the webpage")
         return None  
 
-def skyscanner_flight_search(codes, anchor):
+# def streamline_api_response(api_response):
+#     streamlined_data = []
+
+#     if 'content' not in api_response:
+#         return streamlined_data
+    
+#     # Iterate through each itinerary
+#     for itinerary_id, itinerary_details in api_response['content']['results']['itineraries'].items():
+#         itinerary_info = {
+#             "itinerary_id": itinerary_id,
+#             "pricing_options": [],
+#             "legs": []
+#         }
+
+#         # Add pricing options
+#         for option in itinerary_details['pricingOptions']:
+#             pricing_option = {
+#                 "price": option['price']['amount'],
+#                 "agent_ids": option['agentIds']
+#             }
+#             itinerary_info['pricing_options'].append(pricing_option)
+
+#         # Add leg details
+#         for leg_id in itinerary_details['legIds']:
+#             leg = api_response['content']['legs'][leg_id]
+#             leg_info = {
+#                 "leg_id": leg_id,
+#                 "origin": leg['originPlaceId'],
+#                 "destination": leg['destinationPlaceId'],
+#                 "departure": f"{leg['departureDateTime']['year']}-{leg['departureDateTime']['month']:02d}-{leg['departureDateTime']['day']:02d} {leg['departureDateTime']['hour']:02d}:{leg['departureDateTime']['minute']:02d}",
+#                 "arrival": f"{leg['arrivalDateTime']['year']}-{leg['arrivalDateTime']['month']:02d}-{leg['arrivalDateTime']['day']:02d} {leg['arrivalDateTime']['hour']:02d}:{leg['arrivalDateTime']['minute']:02d}",
+#                 "duration_minutes": leg['durationInMinutes'],
+#                 "stop_count": leg['stopCount']
+#             }
+#             itinerary_info['legs'].append(leg_info)
+
+#         streamlined_data.append(itinerary_info)
+
+#     return streamlined_data
+
+def find_flights(codes, anchor):
     # Assuming codes and anchor in IATA format
     for code in codes:
+        # print(code, codes, anchor)
         url = 'https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/create'
         headers = {'x-api-key': 'sh428739766321522266746152871799'}
         data = {
@@ -179,11 +225,34 @@ def skyscanner_flight_search(codes, anchor):
                 "cabin_class": "CABIN_CLASS_ECONOMY"
             }
         }
-        session_token = requests.post(url, headers=headers, json=data)
+
+        res = requests.post(url, headers=headers, json=data, timeout=5)
+        session_token = res.json()
+        print(session_token)
+        try:
+            session_token = session_token['sessionToken']
+            with open('session_token.pkl', 'wb') as f:
+                pickle.dump(session_token, f)
+        except KeyError:
+            # load the session_token from a pickle file if None
+            with open('session_token.pkl', 'rb') as f:
+                try:
+                    session_token = pickle.load(f)
+                except FileNotFoundError:
+                    session_token = "Default session token"
+
         url = f'https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/poll/{session_token}'
         headers = {'x-api-key': 'sh428739766321522266746152871799'}
-        response = requests.post(url, headers=headers)
-        print(response.json())
+        streamlined_response = requests.post(url, headers=headers, timeout=5)
+
+        # Process the response to extract essential information
+        # streamlined_response = streamline_api_response(response.json())
+
+        # Save the streamlined response to a file with unique name
+        with open(f'streamlined_flights_{code}_{anchor}.json', 'w', encoding='utf8') as f:
+            json.dump(streamlined_response, f, indent=4)
+
+        print(streamlined_response)
 # flightradar_protocol = Protocol("FlightStatusProtocol")
 
 # # Message handler for data requests sent to this agent
@@ -231,11 +300,14 @@ nearest_airports = list(filter(lambda x: x['iata'] != src, nearest_airports))
 nearest_airports = sorted(nearest_airports, key=lambda x: x['distance_in_miles'])
 
 # get the nearest airports IATA codes
+# filter out airport with IATA same as src
 nearest_airports = [airport['iata'] for airport in nearest_airports]
 
 print("Nearest airports:", nearest_airports)
 
-print(skyscanner_flight_search(nearest_airports, dst))
+print(find_safe_flight(src, dst))
 
-# filter out airport with IATA same as src
+print(find_flights(nearest_airports, dst))
+
+
 print(nearest_airports)
